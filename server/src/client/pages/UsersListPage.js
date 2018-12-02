@@ -33,4 +33,13 @@ const mapStateToProps = (state) => ({
   users: state.users
 })
 
-export default connect(mapStateToProps, {fetchUsers})(UsersList)
+function loadData(store) {
+  // we actually return a promise here, why ? because dispatch returns whatever
+  // you give it, and we are giving it a async function.
+  return store.dispatch(fetchUsers())
+}
+
+export default {
+  component: connect(mapStateToProps, {fetchUsers})(UsersList),
+  loadData
+}

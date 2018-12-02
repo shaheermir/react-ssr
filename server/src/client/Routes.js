@@ -2,17 +2,17 @@
  * This file is shared between both client and server.
  */
 
-import Home from "./components/Home"
-import UsersList from "./components/UsersList"
+import HomePage from "./pages/HomePage"
+import UsersListPage from "./pages/UsersListPage"
 
 export default [
   {
     path: "/",
-    component: Home,
-    exact: true
+    exact: true,
+    ...HomePage
   },
   {
     path:"/users",
-    component:UsersList
+    ...UsersListPage
   }
 ]
