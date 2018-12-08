@@ -10,7 +10,7 @@ import ReduxThunk from "redux-thunk"
 import {Provider} from "react-redux"
 import rootReducer from "./reducers"
 
-const store = createStore(rootReducer, {}, applyMiddleware(ReduxThunk))
+const store = createStore(rootReducer, window.__INITIAL_STATE__, applyMiddleware(ReduxThunk))
 
 
 import Routes from "./Routes"
