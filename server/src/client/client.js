@@ -1,6 +1,7 @@
 //Starting point for the client side application
 import "babel-polyfill"
 import React from 'react'
+import axios from "axios"
 import ReactDOM from "react-dom"
 import {BrowserRouter} from "react-router-dom"
 import {renderRoutes} from "react-router-config"
@@ -10,7 +11,12 @@ import ReduxThunk from "redux-thunk"
 import {Provider} from "react-redux"
 import rootReducer from "./reducers"
 
-const store = createStore(rootReducer, window.__INITIAL_STATE__, applyMiddleware(ReduxThunk))
+const axiosInstance = axios.create({
+  baseURL: "/api",
+
+})
+
+const store = createStore(rootReducer, window.__INITIAL_STATE__, applyMiddleware(ReduxThunk.withExtraArgument(axiosInstance)))
 
 
 import Routes from "./Routes"
