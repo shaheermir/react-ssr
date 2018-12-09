@@ -9,8 +9,8 @@ import createStore from "./helpers/createStore"
 
 const app = express()
 
-app.use("/api", proxy("http://www.react-ssr-api.herokuapp.com", {
-  proxyReqOptDecorators(opts) {
+app.use("/api", proxy("http://react-ssr-api.herokuapp.com", {
+  proxyReqOptDecorator(opts) {
     opts.headers["x-forwarded-host"] = "localhost:3000"
     return opts
   }
@@ -19,15 +19,35 @@ app.use("/api", proxy("http://www.react-ssr-api.herokuapp.com", {
 app.use(express.static("public"))
 
 app.get("/*", (req, res) => {
-  const store = createStore()
-
+  // we pass req into createStore. createStore will strip off the cookies frmo req,
+  // and append em to our server side axios client.
+  const store = createStore(req)
   //will ret an array of routes to be rendered based on the url
   const promises = matchRoutes(Routes, req.path).map(({route}) => {
     return route.loadData ? route.loadData(store) : null
+  }).map(promise => {
+    if (promise) {
+      return new Promise((resolve, reject) => {
+        promise.then(resolve).catch(resolve)
+      })
+    }
   })
 
+
+
   Promise.all(promises).then(() => {
-    res.send(renderer(req, store))
+    const context = {}
+    const content = renderer(req, store, context)
+
+    if(context.url) {
+      return res.redirect(301, context.url)
+    }
+
+    if (context.notFound) {
+      res.status(404) //jus setting the status, not actually sending res back here.
+    }
+
+    res.send(content)
   })
 })
 

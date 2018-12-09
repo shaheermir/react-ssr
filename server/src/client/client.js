@@ -13,7 +13,6 @@ import rootReducer from "./reducers"
 
 const axiosInstance = axios.create({
   baseURL: "/api",
-
 })
 
 const store = createStore(rootReducer, window.__INITIAL_STATE__, applyMiddleware(ReduxThunk.withExtraArgument(axiosInstance)))

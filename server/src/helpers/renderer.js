@@ -11,12 +11,14 @@ import Routes from "../client/Routes"
  * Browser Router can just look at the URL in the browser's address bar and fig which route to render.
  * But StaticRouter cannot do that. We have to tell it what route to render. We have to get the url
  * from the original request object.
+ *
+ * Static Router will also pass its context obj down to all components it renders.
  */
 
-export default (req, store) => {
+export default (req, store, context) => {
   const content = renderToString(
     <Provider store={store}>
-      <StaticRouter location={req.path} context={{}}>
+      <StaticRouter location={req.path} context={context}>
         <div>{renderRoutes(Routes)}</div>
       </StaticRouter>
     </Provider>
@@ -24,7 +26,9 @@ export default (req, store) => {
 
   return `
     <html>
-      <head></head>
+      <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+      </head>
       <body>
         <div id="root">${content}</div>
         <script>
