@@ -387,6 +387,8 @@ var _server = __webpack_require__(13);
 
 var _reactRouterConfig = __webpack_require__(3);
 
+var _reactHelmet = __webpack_require__(28);
+
 var _Routes = __webpack_require__(5);
 
 var _Routes2 = _interopRequireDefault(_Routes);
@@ -416,7 +418,9 @@ exports.default = function (req, store, context) {
     )
   ));
 
-  return "\n    <html>\n      <head>\n        <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css\">\n      </head>\n      <body>\n        <div id=\"root\">" + content + "</div>\n        <script>\n          window.__INITIAL_STATE__ = " + (0, _serializeJavascript2.default)(store.getState()) + "\n        </script>\n        <script src=\"bundle.js\"></script>\n      </body>\n    </html>\n  ";
+  var helmet = _reactHelmet.Helmet.renderStatic();
+
+  return "\n    <html>\n      <head>\n        " + helmet.title.toString() + "\n        " + helmet.meta.toString() + "\n        <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css\">\n      </head>\n      <body>\n        <div id=\"root\">" + content + "</div>\n        <script>\n          window.__INITIAL_STATE__ = " + (0, _serializeJavascript2.default)(store.getState()) + "\n        </script>\n        <script src=\"bundle.js\"></script>\n      </body>\n    </html>\n  ";
 };
 
 /***/ }),
@@ -649,6 +653,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(2);
 
+var _reactHelmet = __webpack_require__(28);
+
 var _actions = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -675,6 +681,20 @@ var UsersList = function (_React$Component) {
       this.props.fetchUsers();
     }
   }, {
+    key: "head",
+    value: function head() {
+      return _react2.default.createElement(
+        _reactHelmet.Helmet,
+        null,
+        _react2.default.createElement(
+          "title",
+          null,
+          this.props.users.length + " Users Loaded"
+        ),
+        _react2.default.createElement("meta", { property: "og:title", content: "Users App" })
+      );
+    }
+  }, {
     key: "renderUsers",
     value: function renderUsers() {
       return this.props.users.map(function (user) {
@@ -692,6 +712,7 @@ var UsersList = function (_React$Component) {
       return _react2.default.createElement(
         "div",
         null,
+        this.head(),
         "Here is a list of users:",
         _react2.default.createElement(
           "ul",
@@ -1042,6 +1063,12 @@ exports.default = function (WrappedComponent) {
   };
   return (0, _reactRedux.connect)(mapStateToProps)(RequireAuth);
 };
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports) {
+
+module.exports = require("react-helmet");
 
 /***/ })
 /******/ ]);
